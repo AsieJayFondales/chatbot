@@ -1,25 +1,21 @@
-import os
-import json
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, jsonify
 import google.generativeai as genai
 import nltk
 from nltk.tokenize import word_tokenize  # Tokenization
 from nltk.tag import pos_tag  # POS tagging
 import re  # Regular Expressions
 
-# Initialize Flask app
 app = Flask(__name__)
 
 # Configure Generative AI
-API_KEY = 'AIzaSyAb4CKQ23uIo9PH-FwkGmoB3yHoJHaYuOI' 
+API_KEY = 'AIzaSyAb4CKQ23uIo9PH-FwkGmoB3yHoJHaYuOI'
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 chat = model.start_chat(history=[])
 
-nltk.download('punkt')  # Download tokenizer data
-nltk.download('averaged_perceptron_tagger')  # Download POS tagger data
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
 
-# Store session states in a dictionary (for simplicity, in production consider using a more robust solution)
 sessions = {}
 
 @app.route('/')
@@ -79,7 +75,7 @@ def extract_valid_ingredients(user_message):
         pos_tags = pos_tag(ingredients)
         valid_ingredients = []
         for ingredient, tag in pos_tags:
-            if tag.startswith('NN'):  # Ensure the word is a noun (NN).
+            if tag.startswith('NN'):
                 valid_ingredients.append(ingredient)
         return valid_ingredients
     except Exception as e:
@@ -88,7 +84,6 @@ def extract_valid_ingredients(user_message):
 
 def generate_recipe(ingredients):
     try:
-        # Dummy implementation for generating a recipe based on ingredients
         return "Sample Dish Name"
     except Exception as e:
         print(f"Error in generate_recipe: {e}")
