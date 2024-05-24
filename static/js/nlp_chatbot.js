@@ -65,21 +65,25 @@ function sendMessageToServer(message) {
             url: '/send_message',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ message: message }),
+            data: JSON.stringify({ message: message, session_id: 'default' }), // Ensure session_id is included
             success: function(data) {
                 console.log("Server Response: ", data);
                 chatBox.innerHTML += '<div class="message user-message">' + message + '</div>';
-                chatBox.innerHTML += '<div class="message bot-response">' + data.response + '</div>';
+                if (data.message) {
+                    chatBox.innerHTML += '<div class="message bot-response">' + data.message + '</div>';
+                } else {
+                    chatBox.innerHTML += '<div class="message bot-response">Error: Missing message in response</div>';
+                }
                 chatBox.scrollTop = chatBox.scrollHeight;
                 document.getElementById('user-input').value = '';
 
-                if (data.show_buttons) {
+                if (data.show_buttons && Array.isArray(data.buttons)) {
                     displayButtons(data.buttons);
                 } else {
                     buttonOptions.style.display = 'none';
                 }
 
-                const recipeName = extractRecipeName(data.response);
+                const recipeName = extractRecipeName(data.message);
                 chatBox.setAttribute('data-recipe-name', recipeName || '');
                 console.log("Recipe Name: ", recipeName);
             },
