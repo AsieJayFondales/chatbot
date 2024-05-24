@@ -11,7 +11,7 @@ import re  # Regular Expressions
 app = Flask(__name__)
 
 # Configure Generative AI
-API_KEY = 'YOUR_API_KEY'
+API_KEY = 'AIzaSyAb4CKQ23uIo9PH-FwkGmoB3yHoJHaYuOI' 
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 chat = model.start_chat(history=[])
